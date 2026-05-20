@@ -10,4 +10,4 @@ core idea: me
 comments: Gemini    
 AI knowledge: Deepseek    
 # development
-using embeddings instead of the curretn weight system
+using embeddings instead of the current weight system
