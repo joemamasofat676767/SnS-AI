@@ -1,8 +1,10 @@
 from random import choices
+import json
 
 temp = 0.2
 ValidChar = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q",
              "r","s","t","u","v","w","x","y","z"," ","."}
+# training text
 text = "obama love fried chicken. obama is sigma. he is good."
 text = text.split(".")
 vocab = set()
