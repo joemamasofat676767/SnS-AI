@@ -1,36 +1,48 @@
 from random import choices
 import json
 
-temp = 0.2
+try:
+    with open("knowledge.json", "r") as file:
+        knowledge = json.load(file)
+except:
+    with open("knowledge.json", "w") as file:
+        json.dump({}, file)
+        knowledge = {}
+
+temp = 0.3
 ValidChar = {"a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q",
              "r","s","t","u","v","w","x","y","z"," ","."}
-# training text
 text = "obama love fried chicken. obama is sigma. he is good."
+text = text.lower()
 text = text.split(".")
 vocab = set()
-model = {}
 
 def filter(text):
     FinalText = []
     for sentance in text:
-        LowerSentance = sentance.lower()
-        CleanSentence = "".join(letter for letter in LowerSentance if letter in ValidChar)
-        FinalText.append(CleanSentence)
+        filtered = sentance
+        for letter in sentance:
+            if not letter in ValidChar: filtered = filtered.replace(letter,"")
+        FinalText.append(filtered)
     return FinalText
     
 def CalcChance(vect, multi):
-    inv_multi = 1 / multi
-    return [abs(item ** inv_multi) for item in vect]
+    ChanceMulti = 1 / multi
+    return [abs(item ** ChanceMulti) for item in vect.values()]
 
 class words:
-    def __init__(self, word, next_dict=None):
+    def __init__(self, word):
         self.word = word
-        self.next = {}
+        try:
+            self.next = knowledge[word]
+        except:
+            self.next = {word : {}}
         
     def predict(self):
-        next_choices = list(self.next.keys())
+        next_choices = list(self.next[self.word].keys())
         if next_choices:
-            return choices(next_choices, weights=CalcChance(self.next.values(), temp))[0]
+            print(self.next[self.word])
+            return choices(next_choices, weights=CalcChance(self.next[self.word], temp))[0]
         return ""
     
 FirstIter = True
@@ -41,16 +53,16 @@ for sentance in filter(text):
         
     for word in words_in_sentence:
         if word not in vocab:
-            model[word] = words(word)
+            knowledge[word] = words(word)
             vocab.add(word)
         if FirstIter:
             LastWord = word
             FirstIter = False
             continue
-        if word not in model[LastWord].next:
-            model[LastWord].next[word] = 1
+        if word not in knowledge[LastWord].next[LastWord]:
+            knowledge[LastWord].next[LastWord][word] = 1
         else:
-            model[LastWord].next[word] += 1
+            knowledge[LastWord].next[LastWord][word] += 1
         LastWord = word
     FirstIter = True
 
@@ -59,8 +71,8 @@ sentance = predicted + " "
 finished = False
 
 while not finished:
-    if predicted in model:
-        next_word = model[predicted].predict()
+    if predicted in knowledge:
+        next_word = knowledge[predicted].predict()
         if next_word != "":
             predicted = next_word
             sentance += predicted + " "
@@ -69,4 +81,10 @@ while not finished:
     else:
         finished = True
 
-print(f"genarated: {sentance}")
+with open("knowledge.json", "w") as file:
+    KnowledgeDump = {}
+    for key in knowledge.keys():
+        KnowledgeDump[key] = knowledge[key].next[key]
+    json.dump(KnowledgeDump, file, indent=2)
+    
+print(sentance)
