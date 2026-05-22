@@ -36,13 +36,13 @@ class words:
         try:
             self.next = knowledge[word]
         except:
-            self.next = {word : {}}
+            self.next = {}
         
     def predict(self):
-        next_choices = list(self.next[self.word].keys())
+        next_choices = list(self.next.keys())
         if next_choices:
-            print(self.next[self.word])
-            return choices(next_choices, weights=CalcChance(self.next[self.word], temp))[0]
+            print(self.next)
+            return choices(next_choices, weights=CalcChance(self.next, temp))[0]
         return ""
     
 FirstIter = True
@@ -59,10 +59,10 @@ for sentance in filter(text):
             LastWord = word
             FirstIter = False
             continue
-        if word not in knowledge[LastWord].next[LastWord]:
-            knowledge[LastWord].next[LastWord][word] = 1
+        if word not in knowledge[LastWord].next:
+            knowledge[LastWord].next[word] = 1
         else:
-            knowledge[LastWord].next[LastWord][word] += 1
+            knowledge[LastWord].next[word] += 1
         LastWord = word
     FirstIter = True
 
@@ -84,7 +84,7 @@ while not finished:
 with open("knowledge.json", "w") as file:
     KnowledgeDump = {}
     for key in knowledge.keys():
-        KnowledgeDump[key] = knowledge[key].next[key]
+        KnowledgeDump[key] = knowledge[key].next
     json.dump(KnowledgeDump, file, indent=2)
     
 print(sentance)
