@@ -6,7 +6,7 @@ Deepseek AI and Gemini AI helped me a bit.
 - main code: me    
 - core idea: me    
 - comments: Gemini    
-AI knowledge: Deepseek
+- AI knowledge: Deepseek
 # Patch Notes
 - added save to json
 - fixed major bugs
