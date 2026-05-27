@@ -3,9 +3,9 @@ This is my AI — SnS(simple n stupid). Feel free to use this as a template for 
 version: SnS pre-alpha 2.0
 # Support
 Deepseek AI and Gemini AI helped me a bit.
-- main code: me    
-- core idea: me    
-- comments: Gemini    
+- code: me    
+- ideas: me    
+- guild: Gemini    
 - AI knowledge: Deepseek
 # Patch Notes
 - added save to json
